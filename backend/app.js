@@ -127,6 +127,27 @@ app.get("/skills", authMiddleware, async (req, res) => {
   }
 });
 
+app.post("/Skills/:id/click", async (req, res) => {
+  const skillId = parseInt(req.params.id); // Get the skill ID from the URL
+
+  try {
+    // Increment the `views` count of the specified skill
+    const result = await db.collection(skillsCollection).updateOne(
+      { id: skillId }, // Match the skill by ID
+      { $inc: { views: 1 } } // Increment the `views` count
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: "Skill not found" });
+    }
+
+    res.json({ message: "Skill click tracked successfully" });
+  } catch (error) {
+    console.error("Error incrementing skill views:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

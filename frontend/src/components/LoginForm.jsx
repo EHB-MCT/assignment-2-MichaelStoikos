@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // React Router's navigate hook
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,7 +17,7 @@ const LoginForm = () => {
       const data = await loginUser(formData);
       localStorage.setItem("sessionToken", data.sessionToken); // Save token in localStorage
       setMessage("Login successful");
-      navigate("/home"); // Redirect to the home page
+      navigate("/home"); // Redirect to home page
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed");
     }
