@@ -10,4 +10,4 @@ const skillsPage = () => {
     );
 }
 
-export default skillsPage
+export default SkillsComponent

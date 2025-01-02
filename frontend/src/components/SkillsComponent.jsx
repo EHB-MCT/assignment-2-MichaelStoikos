@@ -1,4 +1,3 @@
-// src/components/SkillList.js
 import React, { useEffect, useState } from "react";
 import { fetchSkills } from "../api/api";
 
@@ -26,7 +25,7 @@ const SkillList = () => {
 
   return (
     <div>
-      <h2>Available Skills</h2>
+      <h1>Available Skills</h1>
       <ul>
         {skills.map((skill) => (
           <h2 key={skill.id}>{skill.name}</h2>
