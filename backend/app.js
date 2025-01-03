@@ -76,10 +76,18 @@ app.post("/login", async (req, res) => {
 
     const sessionToken = uuidv4();
     const startTime = Date.now();
+    const currentDate = new Date().toISOString(); // Current date and time in ISO format
 
+    // Update user with sessionToken, startTime, and PreviouslyConnectedOn
     await db.collection(usersCollection).updateOne(
       { email },
-      { $set: { sessionToken, startTime } }
+      {
+        $set: {
+          sessionToken,
+          startTime,
+          PreviouslyConnectedOn: currentDate, // Update this field with current timestamp
+        },
+      }
     );
 
     activeSessions[sessionToken] = setInterval(() => {
@@ -93,6 +101,7 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 const authMiddleware = async (req, res, next) => {
   const sessionToken = req.header("Authorization");
