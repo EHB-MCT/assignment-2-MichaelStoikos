@@ -29,12 +29,11 @@ const SkillList = () => {
 
   const handleSkillClick = async (skillId) => {
     try {
-      await incrementSkillClick(skillId); // Call API to increment click count
-      // Optional: Update the view count in the local state
+      await incrementSkillClick(skillId);
       setSkills((prevSkills) =>
         prevSkills.map((skill) =>
           skill.id === skillId
-            ? { ...skill, views: skill.views + 1 } // Increment views locally
+            ? { ...skill, views: skill.views + 1 }
             : skill
         )
       );

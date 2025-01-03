@@ -63,6 +63,8 @@ app.post("/register", async (req, res) => {
   }
 });
 
+const activeSessions = {};
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -72,22 +74,20 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
     const sessionToken = uuidv4();
+    const startTime = Date.now();
 
     await db.collection(usersCollection).updateOne(
       { email },
-      { $set: { sessionToken } }
+      { $set: { sessionToken, startTime } }
     );
 
-    res.json({
-      sessionToken,
-      user: { id: user._id, username: user.username },
-    });
+    activeSessions[sessionToken] = setInterval(() => {
+      const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+      console.log(`Time spent on site for session ${sessionToken}: ${elapsedSeconds} seconds`);
+    }, 30000);
+
+    res.json({ sessionToken, message: "Login successful" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
@@ -128,13 +128,12 @@ app.get("/skills", authMiddleware, async (req, res) => {
 });
 
 app.post("/Skills/:id/click", async (req, res) => {
-  const skillId = parseInt(req.params.id); // Get the skill ID from the URL
+  const skillId = parseInt(req.params.id);
 
   try {
-    // Increment the `views` count of the specified skill
     const result = await db.collection(skillsCollection).updateOne(
-      { id: skillId }, // Match the skill by ID
-      { $inc: { views: 1 } } // Increment the `views` count
+      { id: skillId },
+      { $inc: { views: 1 } }
     );
 
     if (result.modifiedCount === 0) {
@@ -145,6 +144,34 @@ app.post("/Skills/:id/click", async (req, res) => {
   } catch (error) {
     console.error("Error incrementing skill views:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/logout", async (req, res) => {
+  const sessionToken = req.header("Authorization");
+
+  try {
+    const user = await db.collection(usersCollection).findOne({ sessionToken });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid session token" });
+    }
+
+    const elapsedSeconds = Math.floor((Date.now() - user.startTime) / 1000);
+
+    await db.collection(usersCollection).updateOne(
+      { sessionToken },
+      { $inc: { totalTimeSpentInSeconds: elapsedSeconds } }
+    );
+
+    console.log(`Session ${sessionToken} finalized. Total time: ${elapsedSeconds} seconds`);
+
+    clearInterval(activeSessions[sessionToken]);
+    delete activeSessions[sessionToken];
+
+    res.status(200).json({ message: "Session finalized successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

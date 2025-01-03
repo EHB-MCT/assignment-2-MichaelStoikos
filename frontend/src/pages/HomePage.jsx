@@ -1,8 +1,38 @@
 import {Link} from "react-router-dom"
 import Nav from "../components/Nav"
 import Skills from "../components/SkillsComponent"
+import axios from "axios";
+import React, { useEffect } from "react";
 
 const homePage = () => {
+
+    useEffect(() => {
+        const handleUnload = async () => {
+          const sessionToken = localStorage.getItem("sessionToken");
+          if (!sessionToken) {
+            console.error("No session token found");
+            return;
+          }
+    
+          try {
+            // Send a request to the backend to finalize the session
+            await axios.post(
+              "http://localhost:5000/logout",
+              {},
+              { headers: { Authorization: sessionToken } }
+            );
+            console.log("Session finalized and time updated in the database");
+          } catch (error) {
+            console.error("Failed to finalize session:", error);
+          }
+        };
+    
+        // Add beforeunload listener
+        window.addEventListener("beforeunload", handleUnload);
+    
+        // Cleanup the event listener when component unmounts
+        return () => window.removeEventListener("beforeunload", handleUnload);
+      }, []);
 
     return (
         <div className="homeContainer">
