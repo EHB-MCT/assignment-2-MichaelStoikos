@@ -218,7 +218,6 @@ form input:focus {
   background: #F8DE7E;
 }
 
-/* Link styles */
 .login-card a {
   color: white;
   text-decoration: none;
@@ -234,11 +233,42 @@ form input:focus {
   text-decoration: underline;
 }
 
-/* Message styles */
 .login-message {
   color: red;
   margin-top: 10px;
   font-size: 0.9rem;
 }
 
+.visualisation-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
 
+.visualisation-container h2 {
+  font-size: 3rem;
+}
+
+.user-data, .overall-data {
+  margin-bottom: 30px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.data-table th {
+ background-color: #F4BB44;
+ color: #1a1a1a;
+}
+
+.data-table tr:hover {
+  background-color: #f9f9f9;
+  color: #1a1a1a;
+}

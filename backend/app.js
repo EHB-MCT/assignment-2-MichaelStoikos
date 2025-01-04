@@ -76,16 +76,16 @@ app.post("/login", async (req, res) => {
 
     const sessionToken = uuidv4();
     const startTime = Date.now();
-    const currentDate = new Date().toISOString(); // Current date and time in ISO format
+    const currentDate = new Date().toISOString(); 
 
-    // Update user with sessionToken, startTime, and PreviouslyConnectedOn
+  
     await db.collection(usersCollection).updateOne(
       { email },
       {
         $set: {
           sessionToken,
           startTime,
-          PreviouslyConnectedOn: currentDate, // Update this field with current timestamp
+          PreviouslyConnectedOn: currentDate, 
         },
       }
     );
@@ -183,6 +183,29 @@ app.post("/logout", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+app.get("/user-data", authMiddleware, async (req, res) => {
+  try {
+    const user = await db.collection(usersCollection).findOne(
+      { sessionToken: req.user.sessionToken },
+      { projection: { username: 1, totalTimeSpentInSeconds: 1, PreviouslyConnectedOn: 1 } }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      username: user.username,
+      totalTimeSpentInSeconds: user.totalTimeSpentInSeconds || 0,
+      PreviouslyConnectedOn: user.PreviouslyConnectedOn || "N/A",
+    });
+  } catch (err) {
+    console.error("Error fetching user data:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

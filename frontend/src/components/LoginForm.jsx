@@ -15,9 +15,9 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const data = await loginUser(formData);
-      localStorage.setItem("sessionToken", data.sessionToken); // Save token in localStorage
+      localStorage.setItem("sessionToken", data.sessionToken);
       setMessage("Login successful");
-      navigate("/home"); // Redirect to home page
+      navigate("/home");
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed");
     }
