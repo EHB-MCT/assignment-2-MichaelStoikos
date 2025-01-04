@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { loginUser } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -24,7 +24,8 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
+    <div className="login-card">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -43,10 +44,14 @@ const LoginForm = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" className="login-button">Login</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="login-message">{message}</p>}
+      <p>
+        Don't have an account? <Link to="/register">Register</Link>
+      </p>
     </div>
+  </div>
   );
 };
 

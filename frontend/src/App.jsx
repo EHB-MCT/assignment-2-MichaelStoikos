@@ -4,6 +4,8 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Visualisation from "./pages/Visualisation"
+import Jobs from "./pages/Jobs"
 
 const App = () => {
   return (
@@ -16,6 +18,22 @@ const App = () => {
           element={
             <ProtectedRoute>
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/visualisation"
+          element={
+            <ProtectedRoute>
+              <Visualisation />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/jobs"
+          element={
+            <ProtectedRoute>
+              <Jobs />
             </ProtectedRoute>
           }
         />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchSkills, incrementSkillClick } from "../api/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SkillList = () => {
   const [skills, setSkills] = useState([]);
@@ -46,16 +46,18 @@ const SkillList = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="skillList">
-      <ul>
+    <div className="skills-container">
+      <div className="skills-list">
         {skills.map((skill) => (
-          <li key={skill.id}>
-            <button onClick={() => handleSkillClick(skill.id)}>
-              {skill.name}
-            </button>
-          </li>
+          <Link to="/jobs"><button
+            key={skill.id}
+            className="skill-button"
+            onClick={() => handleSkillClick(skill.id)}
+          >
+            {skill.name}
+          </button></Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

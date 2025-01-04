@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { registerUser } from "../api/authApi";
+import {  Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({ username: "", email: "", password: "" });
@@ -20,7 +21,8 @@ const RegisterForm = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
+    <div className="login-card">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -47,9 +49,13 @@ const RegisterForm = () => {
           onChange={handleChange}
           required
         />
-        <button type="submit">Register</button>
+        <button type="submit" className="login-button">Register</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="login-message">{message}</p>}
+      <p>
+        Already have an account? <Link to="/">Log In</Link>
+      </p>
+    </div>
     </div>
   );
 };

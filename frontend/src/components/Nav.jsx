@@ -1,20 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Database, LayoutDashboard } from "lucide-react";
 
-const SkillList = () => {
-
+const Nav = () => {
   return (
     <nav>
-        <div>
-            <h1>GatherData</h1>
+      <div className="nav-container">
+        <div className="nav-logo">
+          <Database />
+          <span>GatherData</span>
         </div>
-        <div>
-            <ul>
-                <li><h3>Home</h3></li>
-                <li><h3>Social</h3></li>
-            </ul>
+        <div className="nav-links">
+          <Link to="/home" className="nav-link">
+            <LayoutDashboard />
+            Home
+          </Link>
+          <Link to="/visualisation" className="nav-link">
+            <Database />
+            Visualisatie
+          </Link>
         </div>
+      </div>
     </nav>
   );
 };
 
-export default SkillList;
+export default Nav;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Nav from "../components/Nav";
 import Skills from "../components/SkillsComponent";
+import { Lightbulb, Search, Users } from "lucide-react";
 
 const HomePage = () => {
   const [previouslyConnectedOn, setPreviouslyConnectedOn] = useState("");
@@ -64,25 +65,33 @@ const HomePage = () => {
   };
 
   return (
-    <div className="homeContainer">
+    <div>
       <Nav />
       <Skills />
-      <div className="welcomeFlex">
-        <h1>Welkom op mijn website</h1>
-        <p>
-          Previously connected on: <strong>{formatDate(previouslyConnectedOn)}</strong>
-        </p>
-        <div>
-          <h3>
-            Ben jij actief in de multimediasector en op zoek naar een plek waar talenten samenkomen? Dan ben je hier op de juiste plek! Bij GatherData kun je eenvoudig vaardigheden uitwisselen met andere professionals.
-          </h3>
+      
+      <main className="main-container">
+        <div className="welcome-section">
+          <h1 className="welcome-title">Welkom op mijn website</h1>
+          <p className="welcome-subtitle">
+            Ben jij actief in de multimediasector en op zoek naar een plek waar talenten samenkomen? 
+            Dan ben je hier op de juiste plek! Bij GatherData kun je eenvoudig vaardigheden uitwisselen 
+            met andere professionals.
+          </p>
+        </div>
+
+        <div className="welcomeFlex">
+          <div>
           <p>💡 Hoe werkt het?</p>
           Heb jij een webdeveloper nodig voor jouw project? Of zoek je een designer om jouw visie tot leven te brengen? Plaats een verzoek of reageer op een ander ticket, en ruil jouw expertise voor die van iemand anders. Samen bereiken we meer!
           <p>🔍 Wat kun je hier vinden?</p>
           Een breed scala aan vaardigheden en creatieve professionals. Een plek om jouw talenten te tonen én te versterken. Een community die samenwerking en innovatie stimuleert. Maak snel een account aan, ontdek de mogelijkheden, en start vandaag nog met het uitwisselen van skills!
-          <p>Veel succes en plezier,</p>
+          </div>
         </div>
-      </div>
+
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: '1.125rem', fontWeight: 500 }}>Veel succes en plezier!</p>
+        </div>
+      </main>
     </div>
   );
 };
