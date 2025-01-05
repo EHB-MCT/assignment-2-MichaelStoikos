@@ -1,66 +1,98 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Nav from "../components/Nav";
-import Skills from "../components/SkillsComponent";
-import { Lightbulb, Search, Users } from "lucide-react";
+import Skills from "../components/SkillComponent";
 
 const HomePage = () => {
+  // State to store the previously connected timestamp of the user
   const [previouslyConnectedOn, setPreviouslyConnectedOn] = useState("");
 
+  /**
+ * Fetches user-specific data, including the "PreviouslyConnectedOn" timestamp,
+ * when the component mounts.
+ * 
+ * @function useEffect
+ * - Retrieves the session token from local storage to authenticate the request.
+ * - Calls the `/user` API endpoint to fetch user data.
+ * - Updates the state with the "PreviouslyConnectedOn" value if available.
+ * - Adds an event listener to handle session finalization when the user unloads the page.
+ * 
+ * @returns {void}
+ */
   useEffect(() => {
     const fetchUserData = async () => {
       const sessionToken = localStorage.getItem("sessionToken");
       if (!sessionToken) {
         console.error("No session token found");
-        return;
+        return; // Exit if no session token is found
       }
 
       try {
+        // Fetch user data from the backend
         const response = await axios.get("http://localhost:5000/user", {
-          headers: { Authorization: sessionToken },
+          headers: { Authorization: sessionToken }, // Pass the session token in headers
         });
+        // Update the state with the "PreviouslyConnectedOn" timestamp
         setPreviouslyConnectedOn(response.data.PreviouslyConnectedOn);
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
+        console.error("Failed to fetch user data:", error); // Log any errors encountered
       }
     };
 
+    // Fetch user data when the component mounts
     fetchUserData();
 
+    /**
+   * Handles session finalization when the user unloads the page.
+   * 
+   * @function handleUnload
+   * Sends a `POST` request to the `/logout` endpoint to finalize the session and
+   * update the database with the total time spent on the website.
+   */
     const handleUnload = async () => {
       const sessionToken = localStorage.getItem("sessionToken");
       if (!sessionToken) {
         console.error("No session token found");
-        return;
+        return; // Exit if no session token is found
       }
 
       try {
+         // Finalize the session by calling the logout endpoint
         await axios.post(
           "http://localhost:5000/logout",
-          {},
-          { headers: { Authorization: sessionToken } }
+          {}, // No body content required
+          { headers: { Authorization: sessionToken } } // Pass the session token in headers
         );
         console.log("Session finalized and time updated in the database");
       } catch (error) {
-        console.error("Failed to finalize session:", error);
+        console.error("Failed to finalize session:", error); // Log any errors encountered
       }
     };
 
+    // Add an event listener for the "beforeunload" event to handle session finalization
     window.addEventListener("beforeunload", handleUnload);
 
+    // Cleanup: Remove the event listener when the component unmounts
     return () => window.removeEventListener("beforeunload", handleUnload);
   }, []);
 
+  /**
+ * Formats a given ISO date string into a user-friendly format.
+ * 
+ * @function formatDate
+ * @param {string} isoDate - The ISO date string to format
+ * @returns {string} A formatted date string or a fallback message if the date is invalid
+ */
   const formatDate = (isoDate) => {
     if (!isoDate) return "No previous connection";
     const date = new Date(isoDate);
     return date.toLocaleString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
+      weekday: "long", // Include the day of the week
+      year: "numeric", // Include the year
+      month: "long", // Include the full month name
+      day: "numeric", // Include the day of the month
+      hour: "numeric", // Include the hour
+      minute: "numeric", // Include the minutes
     });
   };
 
